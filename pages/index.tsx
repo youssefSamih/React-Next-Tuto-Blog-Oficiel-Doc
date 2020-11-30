@@ -4,8 +4,17 @@ import Layout, { siteTitle } from "../components/layout";
 import Date from "../components/date";
 import utilStyles from "../styles/utils.module.css";
 import { getSortedPostsData } from "../lib/posts";
+import { GetStaticProps } from "next";
 
-export default function Home({ allPostsData }) {
+export default function Home({
+  allPostsData,
+}: {
+  allPostsData: {
+    date: string;
+    title: string;
+    id: string;
+  }[];
+}) {
   return (
     <Layout home>
       <Head>
@@ -21,7 +30,7 @@ export default function Home({ allPostsData }) {
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h1 className={utilStyles.headingLg}></h1>
         <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, data: { title, date } }) => (
+          {allPostsData.map(({ id, title, date }) => (
             <li className={utilStyles.listItem} key={id}>
               <Link href={`/posts/${id}`}>
                 <a>{title}</a>
@@ -37,7 +46,7 @@ export default function Home({ allPostsData }) {
     </Layout>
   );
 }
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const BeforeParseallPostsData = getSortedPostsData();
   const allPostsData = JSON.parse(JSON.stringify(BeforeParseallPostsData));
   return {
@@ -45,4 +54,4 @@ export async function getStaticProps() {
       allPostsData,
     },
   };
-}
+};
